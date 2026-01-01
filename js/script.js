@@ -1,5 +1,5 @@
-const images = document.querySelectorAll('.visual');
-const dots = document.querySelectorAll('.dots span');
+let images = document.querySelectorAll('.visual');
+let dots = document.querySelectorAll('.dots span');
 const caption = document.getElementById('caption');
 const nextBtn = document.getElementById('next');
 const prevBtn = document.getElementById('prev');
@@ -10,67 +10,80 @@ const ambient = document.getElementById('ambient');
 
 let current = 0;
 
+// === NASA API via Proxy + Fallback ===
 async function loadNASAImage() {
+  let data;
   try {
-    const res = await fetch("https://api.nasa.gov/planetary/apod?api_key=6VIg0kOoD2PRkZIKmruMwiNa9jYGJLdRBQiH3aOd");
-    const data = await res.json();
-
-    // Buat elemen gambar baru
-    const img = document.createElement("img");
-    img.src = data.url;
-    img.className = "visual";
-    img.alt = data.title;
-
-    // Tambahkan ke slideshow
-    document.getElementById("slideshow").appendChild(img);
-
-    // Tambahkan dot navigation
-    const dot = document.createElement("span");
-    document.querySelector(".dots").appendChild(dot);
-
-    // Update caption otomatis
-    caption.textContent = data.title;
-
-    console.log("NASA APOD Loaded:", data.title);
+    // coba lewat proxy backend
+    let res = await fetch("/api/nasa");
+    if (!res.ok) throw new Error("Proxy failed");
+    data = await res.json();
   } catch (err) {
-    console.error("Error loading NASA APOD:", err);
+    console.warn("Proxy /api/nasa gagal, fallback ke API langsung:", err);
+    // fallback ke API langsung
+    const res = await fetch("https://api.nasa.gov/planetary/apod?api_key=6VIg0kOoD2PRkZIKmruMwiNa9jYGJLdRBQiH3aOd");
+    data = await res.json();
   }
+
+  // Buat elemen gambar baru
+  const img = document.createElement("img");
+  img.src = data.url;
+  img.className = "visual";
+  img.alt = data.title;
+
+  // Tambahkan ke slideshow
+  document.getElementById("slideshow").appendChild(img);
+
+  // Tambahkan dot navigation
+  const dot = document.createElement("span");
+  document.querySelector(".dots").appendChild(dot);
+
+  // Refresh array images & dots
+  images = document.querySelectorAll('.visual');
+  dots = document.querySelectorAll('.dots span');
+
+  // Update caption otomatis
+  caption.textContent = `${data.title} — ${data.explanation.substring(0, 100)}...`;
+
+  console.log("NASA APOD Loaded:", data.title);
 }
 
 loadNASAImage();
 
-
-// Slideshow
+// === Slideshow ===
 function showImage(index) {
   images[current].classList.remove('active');
   dots[current].classList.remove('active');
+
   current = (index + images.length) % images.length;
+
   images[current].classList.add('active');
   dots[current].classList.add('active');
   caption.textContent = images[current].alt;
 }
+
 let autoTimer = setInterval(() => showImage(current + 1), 4000);
 nextBtn.onclick = () => { clearInterval(autoTimer); showImage(current+1); };
 prevBtn.onclick = () => { clearInterval(autoTimer); showImage(current-1); };
 dots.forEach((dot,i)=>dot.onclick=()=>{clearInterval(autoTimer);showImage(i);});
 
-// Fullscreen
+// === Fullscreen ===
 fullscreenBtn.onclick = () => {
   const elem = document.getElementById('slideshow');
   if (elem.requestFullscreen) elem.requestFullscreen();
 };
 
-// Audio toggle
+// === Audio toggle ===
 audioBtn.onclick = () => {
   if (ambient.paused) ambient.play(); else ambient.pause();
 };
 
-// Day/Night mode
+// === Day/Night mode ===
 modeBtn.onclick = () => {
   document.body.classList.toggle('day');
 };
 
-// Particle stars
+// === Particle stars ===
 const particlesCanvas = document.getElementById('particles');
 const ctxP = particlesCanvas.getContext('2d');
 particlesCanvas.width = 360; particlesCanvas.height = 640;
@@ -82,7 +95,7 @@ function drawStars(){
 }
 setInterval(drawStars,100);
 
-// Meteors
+// === Meteors ===
 const meteorsCanvas = document.getElementById('meteors');
 const ctxM = meteorsCanvas.getContext('2d');
 meteorsCanvas.width=360; meteorsCanvas.height=640;
@@ -97,7 +110,7 @@ function drawMeteors(){
 setInterval(spawnMeteor,2000);
 setInterval(drawMeteors,50);
 
-// Spark interactivity
+// === Spark interactivity ===
 document.getElementById('slideshow').addEventListener('click',(e)=>{
   const spark=document.createElement('img');
   spark.src="assets/spark.png";
