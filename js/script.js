@@ -10,6 +10,36 @@ const ambient = document.getElementById('ambient');
 
 let current = 0;
 
+async function loadNASAImage() {
+  try {
+    const res = await fetch("https://api.nasa.gov/planetary/apod?api_key=6VIg0kOoD2PRkZIKmruMwiNa9jYGJLdRBQiH3aOd");
+    const data = await res.json();
+
+    // Buat elemen gambar baru
+    const img = document.createElement("img");
+    img.src = data.url;
+    img.className = "visual";
+    img.alt = data.title;
+
+    // Tambahkan ke slideshow
+    document.getElementById("slideshow").appendChild(img);
+
+    // Tambahkan dot navigation
+    const dot = document.createElement("span");
+    document.querySelector(".dots").appendChild(dot);
+
+    // Update caption otomatis
+    caption.textContent = data.title;
+
+    console.log("NASA APOD Loaded:", data.title);
+  } catch (err) {
+    console.error("Error loading NASA APOD:", err);
+  }
+}
+
+loadNASAImage();
+
+
 // Slideshow
 function showImage(index) {
   images[current].classList.remove('active');
