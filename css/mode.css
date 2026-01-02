@@ -1,0 +1,37 @@
+/* Default Night Mode (gelap kosmik) */
+body {
+  background: radial-gradient(circle at 50% 50%, #000010, #000000);
+  color: #ffffff;
+  transition: background 1s ease, color 1s ease;
+}
+
+/* Day Mode */
+body.day-mode {
+  background: linear-gradient(to bottom, #87ceeb, #ffffff);
+  color: #000000;
+}
+
+/* Slideshow caption adaptasi */
+body.day-mode .caption {
+  color: #222;
+  text-shadow: none;
+}
+
+body:not(.day-mode) .caption {
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255,255,255,0.8);
+}
+
+/* Tombol adaptasi */
+.controls button {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: inherit;
+  transition: background 0.5s ease, color 0.5s ease;
+}
+
+body.day-mode .controls button {
+  background: rgba(0,0,0,0.05);
+  border: 1px solid rgba(0,0,0,0.2);
+  color: #000;
+}

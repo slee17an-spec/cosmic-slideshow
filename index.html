@@ -3,41 +3,44 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cosmic Slideshow Upgrade</title>
+  <title>Cosmic Slideshow + NASA Multi-API</title>
+
+  <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/aurora.css">
+  <link rel="stylesheet" href="css/nebula.css">
+  <link rel="stylesheet" href="css/galaxy.css">
+  <link rel="stylesheet" href="css/silhouette.css">
+  <link rel="stylesheet" href="css/mode.css">
 </head>
 <body>
   <div class="slideshow" id="slideshow">
-    <!-- Gambar -->
+    <!-- Local images as base -->
     <img src="assets/galaxy1.jpg" class="visual active" alt="Galaxy">
     <img src="assets/nebula1.jpg" class="visual" alt="Nebula">
     <img src="assets/aurora1.jpg" class="visual" alt="Aurora">
     <img src="assets/silhouette1.jpg" class="visual" alt="Silhouette">
 
-    <!-- Overlay efek -->
+    <!-- Interactive overlays -->
     <canvas id="particles"></canvas>
     <canvas id="meteors"></canvas>
     <div class="aurora"></div>
     <div class="nebula"></div>
+    <div class="galaxy"></div>
+    <div class="silhouette"></div>
 
-    <!-- Caption -->
+    <!-- UI -->
     <div class="caption" id="caption">Galaxy</div>
-
-    <!-- Tombol navigasi -->
     <div class="nav-buttons">
       <button id="prev">⟨ Prev</button>
       <button id="next">Next ⟩</button>
     </div>
-
-    <!-- Dot navigation -->
     <div class="dots">
       <span class="active"></span>
       <span></span>
       <span></span>
       <span></span>
     </div>
-
-    <!-- Kontrol tambahan -->
     <div class="controls">
       <button id="fullscreen">⛶ Fullscreen</button>
       <button id="toggleAudio">🔊 Audio</button>
